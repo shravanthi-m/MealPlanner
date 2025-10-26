@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import Food from "./food";
 
 const mealScehma = new mongoose.Schema({
   name: { type: String, required: true },
