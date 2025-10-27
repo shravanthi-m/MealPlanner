@@ -1,5 +1,5 @@
 //hardcoded dev token for testing
-const DEV_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZmYxN2RiNzVkMGUzM2ExN2UxNGE5ZiIsImlhdCI6MTc2MTU5MjYzMSwiZXhwIjoxNzYxNTk2MjMxfQ.oNuzT7vLSreIFtjf8qBY1WJz0uU0XiAFLDcDPtZcmuw";
+const DEV_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZmYxN2RiNzVkMGUzM2ExN2UxNGE5ZiIsImlhdCI6MTc2MTYwMDMxMywiZXhwIjoxNzYxNjAzOTEzfQ.qhGvfMWxyIyF5w29eWvLORGkO0BgcXc2LUtjibfxc9I";
 
 // Utility for API calls
 export async function apiFetch(url, options = {}) {

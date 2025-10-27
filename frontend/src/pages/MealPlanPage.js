@@ -4,6 +4,7 @@ import WeeklyMealPlanGrid from "../components/WeeklyMealPlanGrid";
 import { useFoods } from "../hooks/useFoods";
 import { useMealPlan } from "../hooks/useMealPlan";
 import NavBar from "../components/NavBar";
+import "./MealPlanPage.css";
 
 const getWeekStartISO = () => {
   const now = new Date();
@@ -18,7 +19,16 @@ const MealPlanPage = () => {
   const { mealPlan, setMealPlan, saveMealPlan, loading, error } = useMealPlan(weekStart);
   const { foods, loading: foodsLoading, error: foodsError } = useFoods();
 
-  if (loading || foodsLoading) return <div>Loading...</div>;
+    if (loading || foodsLoading) return (
+      <div>
+        <NavBar />
+        <div className="meal-plan-page">
+          <div className="meal-plan-card">
+            <div className="loading-message">Loading...</div>
+          </div>
+        </div>
+      </div>
+    );
   if (error) return <div>Error: {error.message || error.toString()}</div>;
   if (foodsError) return <div>Error: {foodsError.message || foodsError.toString()}</div>;
 
@@ -46,14 +56,23 @@ const MealPlanPage = () => {
   return (
     <div>
       <NavBar />
-      <h1>Weekly Meal Plan</h1>
-      <WeeklyMealPlanGrid
-        weekStart={weekStart}
-        mealPlan={mealPlan || defaultPlan}
-        onChange={handleMealPlanChange}
-        foods={foods}
-      />
-      {error && <div style={{ color: "red" }}>{error.message || error.toString()}</div>}
+        <div className="meal-plan-page">
+          <div className="meal-plan-card">
+            <div className="meal-plan-header">
+              <h2>Weekly Meal Plan</h2>
+              <p className="lead">Plan your meals for the week ahead</p>
+            </div>
+            <div className="meal-plan-content">
+              <WeeklyMealPlanGrid
+                weekStart={weekStart}
+                mealPlan={mealPlan || defaultPlan}
+                onChange={handleMealPlanChange}
+                foods={foods}
+              />
+            </div>
+            {error && <div className="error-message">{error.message || error.toString()}</div>}
+          </div>
+        </div>
     </div>
   );
 };
