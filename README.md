@@ -7,7 +7,7 @@
 ### 1) Backend
 ```text
 cd backend
-cp .env.example .env  # then edit with your real values
+cp env.example .env  # then edit with your real values
 npm install
 npm run dev           # starts on http://localhost:5001
 ```
@@ -17,7 +17,7 @@ In a new terminal:
 
 ``` text
 cd frontend
-# Ensure package.json has: "proxy": "http://localhost:5001"
+cp env.example .env  # then edit with your real values
 npm install
-npm start             # opens http://localhost:3000
+npm run dev             # opens http://localhost:3000
 ```
