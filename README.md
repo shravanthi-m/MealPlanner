@@ -9,7 +9,7 @@
 cd backend
 cp env.example .env  # then edit with your real values
 npm install
-npm run dev           # starts on http://localhost:5001
+npm run dev           # starts on http://localhost:5000
 ```
 ### 2) Frontend
 
@@ -19,5 +19,5 @@ In a new terminal:
 cd frontend
 cp env.example .env  # then edit with your real values
 npm install
-npm run dev             # opens http://localhost:3000
+npm run dev             # opens http://localhost:5173
 ```
