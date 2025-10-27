@@ -2,7 +2,7 @@
 import { createStore, addMiddleware, setStoreValue } from 'pulsy';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL + '/api/auth';
 
 // Create a store to hold the user and token
 createStore('auth', {
