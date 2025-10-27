@@ -5,5 +5,6 @@ const foodSchema = new mongoose.Schema({
 //   info: { type: ?, required: true },
 });
 
+
 const Food = mongoose.model("Food", foodSchema);
 export default Food;
