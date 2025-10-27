@@ -29,39 +29,34 @@ export const generateShoppingList = async (req, res) => {
       foodMap[food._id.toString()] = food;
     }
 
-    // Aggregate shopping items by ingredient, sum quantities, and categorize
+    // Aggregate shopping items by ingredient, sum quantities for all occurrences
     const itemMap = {};
     mealPlan.days.forEach(day => {
       ["breakfast", "lunch", "dinner", "snacks"].forEach(mealType => {
         day[mealType].forEach(entry => {
           const food = foodMap[entry.foodId?.toString()];
           if (!food) return;
-          // For each ingredient in the food
-          (food.ingredients || []).forEach(ingredient => {
-            const key = ingredient.name.toLowerCase();
-            if (!itemMap[key]) {
-              itemMap[key] = {
-                name: ingredient.name,
-                quantity: 0,
-                unit: ingredient.unit || "unit",
-                checked: false,
-                category: null
-              };
-            }
-            // Multiply by servings if present
-            const servings = entry.servings || 1;
-            itemMap[key].quantity += (ingredient.quantity || 1) * servings;
-          });
+          const servings = entry.servings || 1;
+          for (let i = 0; i < servings; i++) {
+            (food.ingredients || []).forEach(ingredient => {
+              const key = ingredient.name.toLowerCase();
+              if (!itemMap[key]) {
+                itemMap[key] = {
+                  name: ingredient.name,
+                  quantity: 0,
+                  unit: ingredient.unit || "unit",
+                  checked: false,
+                  category: null
+                };
+              }
+              itemMap[key].quantity += ingredient.quantity || 1;
+            });
+          }
         });
       });
     });
 
-    // Fill missing categories using USDA API
-    for (const key in itemMap) {
-      if (!itemMap[key].category) {
-        itemMap[key].category = await getFoodCategoryFromUSDA(itemMap[key].name);
-      }
-    }
+    // Do not assign categories; just leave as null for a plain checklist
 
     // Save shopping list
     const items = Object.values(itemMap);

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../utils/api";
 
@@ -46,6 +47,7 @@ export default function AddFoodPage() {
 
   return (
     <div style={{ maxWidth: 500, margin: "2rem auto" }}>
+      <NavBar />
       <h2>Add Food</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -88,9 +90,6 @@ export default function AddFoodPage() {
         <button type="submit" style={{ marginTop: "1rem" }}>Add Food</button>
       </form>
       {message && <div style={{ marginTop: "1rem", color: message.includes("success") ? "green" : "red" }}>{message}</div>}
-      <button onClick={() => navigate("/meal-plan")} style={{ marginTop: "1rem" }}>
-        Go to Weekly Meal Plan
-      </button>
     </div>
   );
 }
