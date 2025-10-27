@@ -1,6 +1,9 @@
 // NavBar.js
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { getStoreValue, setStoreValue } from "pulsy";
+import { logout } from "../services/auth.service";
+
 import "./NavBar.css";
 
 export default function NavBar() {
@@ -13,13 +16,14 @@ export default function NavBar() {
     // read user from localStorage if present (try multiple keys)
     try {
       let u = null;
-      const raw = localStorage.getItem("user");
-      if (raw) {
-        u = JSON.parse(raw);
-      } else if (localStorage.getItem("username")) {
-        u = { username: localStorage.getItem("username") };
-      } else if (localStorage.getItem("email")) {
-        u = { email: localStorage.getItem("email") };
+      const store = getStoreValue('auth');
+      const info = store.user;
+      if (info) {
+        u = info.username;
+      } else if (store.username) {
+        u = { username: store.username };
+      } else if (store.email) {
+        u = { email: store.email };
       }
       setUser(u);
     } catch (e) {
@@ -36,9 +40,7 @@ export default function NavBar() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    // if app uses tokens in localStorage, remove them as well
-    localStorage.removeItem("token");
+    logout()
     setUser(null);
     setMenuOpen(false);
     navigate("/");
@@ -47,8 +49,9 @@ export default function NavBar() {
   const handleSwitchUser = () => {
     const name = window.prompt("Enter display name for user (for dev/demo):", user?.name || "");
     if (name !== null) {
-      const newUser = { name: name.trim() || "Guest" };
-      localStorage.setItem("user", JSON.stringify(newUser));
+      const store = getStoreValue('auth');
+      const newUser = { username: name.trim() || "Guest" };
+      setStoreValue('auth', { token: store.token, user: newUser });
       setUser(newUser);
       setMenuOpen(false);
     }
