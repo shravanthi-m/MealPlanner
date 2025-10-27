@@ -59,6 +59,12 @@ const MealPlanPage = () => {
       >
         Go to Shopping List
       </button>
+      <button
+        onClick={() => navigate("/add-food")}
+        style={{ marginTop: "1rem", marginLeft: "1rem" }}
+      >
+        Add Food
+      </button>
       {error && <div style={{ color: "red" }}>{error.message || error.toString()}</div>}
     </div>
   );
