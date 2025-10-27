@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import { Link } from 'react-router-dom';
+import { register } from '../services/auth.service';
 
 const RegisterPage = () => {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
@@ -8,7 +9,7 @@ const RegisterPage = () => {
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     if (!form.name || !form.email || !form.password || !form.confirm) {
@@ -19,7 +20,12 @@ const RegisterPage = () => {
       setError('Passwords do not match.');
       return;
     }
-    alert('Registered (mock)');
+
+    const success = await register(form.name, form.email, form.password);
+
+    if (success) {
+      alert('You successly created your account! Go back to the login page to sign in');
+    }
   };
 
   return (
@@ -36,7 +42,7 @@ const RegisterPage = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Full name</label>
+              <label>Username</label>
               <input name="name" value={form.name} onChange={handleChange} className="input" placeholder="Jane Doe" required />
             </div>
 

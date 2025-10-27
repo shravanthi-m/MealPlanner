@@ -29,7 +29,7 @@ const LoginPage = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="usernameOrEmail">Email or Username</label>
+              <label htmlFor="usernameOrEmail">Email</label>
               <input id="usernameOrEmail" name="usernameOrEmail" className="input" value={formData.usernameOrEmail} onChange={handleChange} placeholder="user@example.com" required />
             </div>
 
