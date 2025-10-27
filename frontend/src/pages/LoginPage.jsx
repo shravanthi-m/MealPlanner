@@ -12,8 +12,8 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const success = await login(formData.usernameOrEmail, formData.password);
-    if (success) {
-      alert('Login successful!');
+    if (!success) {
+      alert('Incorrect email or password!');
     }
   };
 

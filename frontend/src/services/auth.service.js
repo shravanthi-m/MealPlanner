@@ -34,11 +34,7 @@ export const register = async (username, email, password) => {
         `${API_URL}/register`,
         { username, email, password }
     );
-
-    const { message } = response.data;
-
-    console.log(message);
-
+  
     return true;
   } catch (error) {
     console.error('Login failed', error);
