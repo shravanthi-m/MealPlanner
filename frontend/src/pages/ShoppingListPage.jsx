@@ -1,5 +1,6 @@
 // Shopping List Page
-import React from "react";
+import React, { useEffect } from "react";
+import NavBar from "../components/NavBar";
 import ShoppingListView from "../components/ShoppingListView";
 import { useShoppingList } from "../hooks/useShoppingList";
 
@@ -15,14 +16,20 @@ const ShoppingListPage = () => {
   const weekStart = getWeekStartISO();
   const { list, loading, error, checkItem, generateList } = useShoppingList(weekStart);
 
+  // Automatically generate shopping list on mount
+  useEffect(() => {
+    generateList();
+    // eslint-disable-next-line
+  }, []);
+
   const handleDownloadPDF = () => {
     window.open(`/api/shopping-list/pdf?weekStart=${encodeURIComponent(weekStart)}`, "_blank");
   };
 
   return (
     <div>
+      <NavBar />
       <h1>Shopping List</h1>
-      <button onClick={generateList} style={{ marginRight: "1rem" }}>Generate Shopping List</button>
       <button onClick={handleDownloadPDF}>Download PDF</button>
       {loading && <div>Loading...</div>}
       {error && <div style={{ color: "red" }}>{error.message || error.toString()}</div>}

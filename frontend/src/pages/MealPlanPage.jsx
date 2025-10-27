@@ -3,7 +3,7 @@ import React from "react";
 import WeeklyMealPlanGrid from "../components/WeeklyMealPlanGrid";
 import { useFoods } from "../hooks/useFoods";
 import { useMealPlan } from "../hooks/useMealPlan";
-import { useNavigate } from "react-router-dom";
+import NavBar from "../components/NavBar";
 
 const getWeekStartISO = () => {
   const now = new Date();
@@ -14,7 +14,6 @@ const getWeekStartISO = () => {
 };
 
 const MealPlanPage = () => {
-  const navigate = useNavigate();
   const weekStart = getWeekStartISO();
   const { mealPlan, setMealPlan, saveMealPlan, loading, error } = useMealPlan(weekStart);
   const { foods, loading: foodsLoading, error: foodsError } = useFoods();
@@ -38,33 +37,22 @@ const MealPlanPage = () => {
     })
   };
 
+  // Auto-save meal plan on every change
+  const handleMealPlanChange = (newPlan) => {
+    setMealPlan(newPlan);
+    saveMealPlan(newPlan);
+  };
+
   return (
     <div>
+      <NavBar />
       <h1>Weekly Meal Plan</h1>
       <WeeklyMealPlanGrid
         weekStart={weekStart}
         mealPlan={mealPlan || defaultPlan}
-        onChange={setMealPlan}
+        onChange={handleMealPlanChange}
         foods={foods}
       />
-      <button
-        onClick={() => saveMealPlan(mealPlan || defaultPlan)}
-        style={{ marginTop: "1rem" }}
-      >
-        Save Meal Plan
-      </button>
-      <button
-        onClick={() => navigate("/shopping-list")}
-        style={{ marginTop: "1rem", marginLeft: "1rem" }}
-      >
-        Go to Shopping List
-      </button>
-      <button
-        onClick={() => navigate("/add-food")}
-        style={{ marginTop: "1rem", marginLeft: "1rem" }}
-      >
-        Add Food
-      </button>
       {error && <div style={{ color: "red" }}>{error.message || error.toString()}</div>}
     </div>
   );

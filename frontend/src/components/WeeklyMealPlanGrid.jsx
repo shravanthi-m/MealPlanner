@@ -37,6 +37,7 @@ export default function WeeklyMealPlanGrid({ weekStart, mealPlan, onChange, food
                 <CustomMealSelector
                   foods={foods}
                   selected={day[mealType][0]?.foodId || ""}
+                  mealType={mealType}
                   onChange={foodId => {
                     handleMealChange(dayIdx, mealType, foodId ? [{ foodId }] : []);
                   }}
