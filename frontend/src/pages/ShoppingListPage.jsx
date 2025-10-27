@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import NavBar from "../components/NavBar";
 import ShoppingListView from "../components/ShoppingListView";
 import { useShoppingList } from "../hooks/useShoppingList";
+import "./ShoppingListPage.css";
 
 const getWeekStartISO = () => {
   const now = new Date();
@@ -29,11 +30,28 @@ const ShoppingListPage = () => {
   return (
     <div>
       <NavBar />
-      <h1>Shopping List</h1>
-      <button onClick={handleDownloadPDF}>Download PDF</button>
-      {loading && <div>Loading...</div>}
-      {error && <div style={{ color: "red" }}>{error.message || error.toString()}</div>}
-      {list && <ShoppingListView items={list.items} onCheck={checkItem} />}
+      <div className="shopping-page">
+        <div className="shopping-card">
+          <div className="shopping-header">
+            <h2>Shopping List</h2>
+            <p className="lead">Your weekly grocery list based on meal plan</p>
+            <div className="controls">
+              <button className="btn" onClick={handleDownloadPDF}>Download PDF</button>
+            </div>
+          </div>
+
+          {loading && <div className="empty">Loading...</div>}
+          {error && <div className="empty" style={{ color: "#b91c1c" }}>{error.message || error.toString()}</div>}
+
+          {list ? (
+            <div className="shopping-list">
+              <ShoppingListView items={list.items} onCheck={checkItem} />
+            </div>
+          ) : (
+            !loading && <div className="empty">No shopping list available for this week.</div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

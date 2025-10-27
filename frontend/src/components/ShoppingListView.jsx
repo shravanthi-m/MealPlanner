@@ -2,19 +2,22 @@
 import React from "react";
 
 export default function ShoppingListView({ items = [], onCheck }) {
+  if (!items || items.length === 0) return <div className="empty">No items in the shopping list.</div>;
+
   return (
     <div className="shopping-list-view">
       <ul>
-        {items.map(item => (
-          <li key={item.name}>
+        {items.map((item) => (
+          <li key={item.name} className="shopping-item">
             <label>
               <input
                 type="checkbox"
-                checked={item.checked}
+                checked={!!item.checked}
                 onChange={() => onCheck(item.name)}
               />
-              {item.name} ({item.quantity} {item.unit})
+              <span>{item.name}</span>
             </label>
+            <div className="meta">{item.quantity} {item.unit}</div>
           </li>
         ))}
       </ul>
