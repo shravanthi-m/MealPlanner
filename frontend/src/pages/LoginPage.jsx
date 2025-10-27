@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { login } from '../services/auth.service';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ usernameOrEmail: '', password: '' });
+  const navigate = useNavigate();
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -14,6 +15,8 @@ const LoginPage = () => {
     const success = await login(formData.usernameOrEmail, formData.password);
     if (!success) {
       alert('Incorrect email or password!');
+    } else {
+      navigate('/meal-plan')
     }
   };
 
