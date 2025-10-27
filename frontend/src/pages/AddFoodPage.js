@@ -46,50 +46,52 @@ export default function AddFoodPage() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ maxWidth: 500, margin: "2rem auto" }}>
+    <>
       <NavBar />
-      <h2>Add Food</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name:</label>
-          <input value={name} onChange={e => setName(e.target.value)} required />
-        </div>
-        <div>
-          <label>Category:</label>
-          <input value={category} onChange={e => setCategory(e.target.value)} />
-        </div>
-        <div>
-          <label>Ingredients:</label>
-          {ingredients.map((ing, idx) => (
-            <div key={idx} style={{ display: "flex", gap: "0.5rem", marginBottom: 4 }}>
-              <input
-                placeholder="Name"
-                value={ing.name}
-                onChange={e => handleIngredientChange(idx, "name", e.target.value)}
-                required
-              />
-              <input
-                type="number"
-                min="0"
-                step="any"
-                placeholder="Quantity"
-                value={ing.quantity}
-                onChange={e => handleIngredientChange(idx, "quantity", e.target.value)}
-                required
-              />
-              <input
-                placeholder="Unit"
-                value={ing.unit}
-                onChange={e => handleIngredientChange(idx, "unit", e.target.value)}
-              />
-              <button type="button" onClick={() => removeIngredient(idx)} disabled={ingredients.length === 1}>Remove</button>
-            </div>
-          ))}
-          <button type="button" onClick={addIngredient}>Add Ingredient</button>
-        </div>
-        <button type="submit" style={{ marginTop: "1rem" }}>Add Food</button>
-      </form>
-      {message && <div style={{ marginTop: "1rem", color: message.includes("success") ? "green" : "red" }}>{message}</div>}
-    </div>
+      <div style={{ maxWidth: 500, margin: "2rem auto" }}>
+        <h2>Add Food</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Name:</label>
+            <input value={name} onChange={e => setName(e.target.value)} required />
+          </div>
+          <div>
+            <label>Category:</label>
+            <input value={category} onChange={e => setCategory(e.target.value)} />
+          </div>
+          <div>
+            <label>Ingredients:</label>
+            {ingredients.map((ing, idx) => (
+              <div key={idx} style={{ display: "flex", gap: "0.5rem", marginBottom: 4 }}>
+                <input
+                  placeholder="Name"
+                  value={ing.name}
+                  onChange={e => handleIngredientChange(idx, "name", e.target.value)}
+                  required
+                />
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  placeholder="Quantity"
+                  value={ing.quantity}
+                  onChange={e => handleIngredientChange(idx, "quantity", e.target.value)}
+                  required
+                />
+                <input
+                  placeholder="Unit"
+                  value={ing.unit}
+                  onChange={e => handleIngredientChange(idx, "unit", e.target.value)}
+                />
+                <button type="button" onClick={() => removeIngredient(idx)} disabled={ingredients.length === 1}>Remove</button>
+              </div>
+            ))}
+            <button type="button" onClick={addIngredient}>Add Ingredient</button>
+          </div>
+          <button type="submit" style={{ marginTop: "1rem" }}>Add Food</button>
+        </form>
+        {message && <div style={{ marginTop: "1rem", color: message.includes("success") ? "green" : "red" }}>{message}</div>}
+      </div>
+    </>
   );
 }
