@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { register } from '../services/auth.service';
 
 const RegisterPage = () => {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
   const [error, setError] = useState('');
+  const navigate = useNavigate()
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -25,6 +26,7 @@ const RegisterPage = () => {
 
     if (success) {
       alert('You successly created your account! Go back to the login page to sign in');
+      navigate('/login');
     }
   };
 
