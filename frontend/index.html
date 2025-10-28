@@ -4,10 +4,23 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
+    <title>Meal Planner</title>
+    <!-- UPDATED GLOBAL STYLES: Removed centering from #root to allow header/footer to be full screen -->
+    <style>
+      #root {
+        /*
+          The header and footer should now be full-width.
+          We only keep the min-height to ensure the background covers the whole screen.
+        */
+        min-height: 100vh;
+      }
+    </style>
   </head>
-  <body>
+  
+  <!-- CRITICAL FIX: Adding bg-gray-50 directly to the body -->
+  <body class="bg-gray-50"> 
     <div id="root"></div>
+    <!-- The JavaScript entry point (main.jsx) is loaded here by Vite -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
