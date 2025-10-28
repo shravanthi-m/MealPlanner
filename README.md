@@ -20,4 +20,5 @@ cd frontend
 cp env.example .env  # then edit with your real values
 npm install
 npm run dev             # opens http://localhost:5173
+
 ```
