@@ -2,6 +2,7 @@
 - Node.js 18+ (includes npm)
 - MongoDB Atlas account (or local MongoDB)
 
+
 ## Setup
 
 ### 1) Backend
