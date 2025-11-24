@@ -5,6 +5,10 @@ const clientSecret = process.env.FAT_SECRET_CLIENT_SECRET;
 
 const tokenUrl = 'https://oauth.fatsecret.com/connect/token';
 
+/**
+ * Fetches an access token from FatSecret API
+ * @returns {Promise<Object>} API response data
+ */
 export async function getAccessToken() {
   const formData = new URLSearchParams();
   formData.append('grant_type', 'client_credentials');
@@ -27,6 +31,13 @@ export async function getAccessToken() {
   }
 }
 
+/**
+ * Makes an authenticated request to the FatSecret API
+ * @param {String} accessToken access token from 'getAccessToken' method
+ * @param {*} method search method to use (e.g. 'foods.search')
+ * @param {*} params search parameters (e.g. {search_expression: 'apple'})
+ * @returns {Promise<Object>} API response data
+ */
 export async function callFatSecretApi(accessToken, method, params = {}) {
   const apiUrl = 'https://platform.fatsecret.com/rest/server.api';
   const response = await axios.get(apiUrl, {
