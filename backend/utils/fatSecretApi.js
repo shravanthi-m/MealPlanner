@@ -34,8 +34,8 @@ export async function getAccessToken() {
 /**
  * Makes an authenticated request to the FatSecret API
  * @param {String} accessToken access token from 'getAccessToken' method
- * @param {*} method search method to use (e.g. 'foods.search')
- * @param {*} params search parameters (e.g. {search_expression: 'apple'})
+ * @param {String} method search method to use (e.g. 'foods.search')
+ * @param {Object} params search parameters (e.g. {search_expression: 'apple'})
  * @returns {Promise<Object>} API response data
  */
 export async function callFatSecretApi(accessToken, method, params = {}) {
@@ -51,4 +51,20 @@ export async function callFatSecretApi(accessToken, method, params = {}) {
     },
   });
   return response.data;
+}
+
+/**
+ * Search for food by expression using foods.search method in FatSecret API
+ * @param {String} accessToken access token from 'getAccessToken' method
+ * @param {String} searchExpression name of the food to search
+ * @param {number} max_results maximum number of results to return
+ * @returns {Promise<Object>} API response data
+ */
+export async function searchFoods(accessToken, searchExpression, max_results=10) {
+  const params = {
+    search_expression: searchExpression,
+    max_results: max_results,
+  };
+  const data = await callFatSecretApi(accessToken, 'foods.search', params);
+  return data;
 }
