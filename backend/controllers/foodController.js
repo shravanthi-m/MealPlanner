@@ -1,12 +1,11 @@
 import Food from "../models/Food.js";
 import { getFoodCategoryFromUSDA } from "../utils/usdaApi.js";
+import { getAccessToken, searchFoods } from "../utils/fatSecretApi.js";
 
 // POST /api/food
 export const createFood = async (req, res) => {
   try {
-    const { name, ingredients = [] } = req.body;
-    // Lookup category from USDA API
-    const category = await getFoodCategoryFromUSDA(name);
+    const { name, category, ingredients = [] } = req.body;
     const food = new Food({ name, category, ingredients });
     await food.save();
     return res.status(201).json(food);
@@ -16,10 +15,32 @@ export const createFood = async (req, res) => {
   }
 };
 
-// Optionally add GET /api/food for listing foods
+// Optionally add GET /api/food/ for listing foods
 export const getFoods = async (req, res) => {
   try {
-    const foods = await Food.find();
+    const { name } = req.body;
+
+    // TODO: parse filters from body
+    // filters = {}
+
+    // find food among existing
+    let foods = await Food.find({ name: name });
+
+    // if no results in databse query external API
+    if (foods.length === 0) {
+      // search FatSecret API
+      foods = await searchFoods(await getAccessToken(), name, 5);
+
+      // convert to Food model instances
+      foods = await Promise.all(foods.map(async (food) => {
+        return new Food({
+          name: food.name,
+          category: food.category,
+          ingredients: food.ingredients
+        });
+      }));
+    }
+
     return res.status(200).json(foods);
   } catch (err) {
     console.error("Food fetch error:", err);

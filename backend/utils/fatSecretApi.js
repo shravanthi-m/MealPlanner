@@ -1,8 +1,5 @@
 import axios from 'axios';
 
-const clientId = process.env.FAT_SECRET_CLIENT_ID;
-const clientSecret = process.env.FAT_SECRET_CLIENT_SECRET;
-
 const tokenUrl = 'https://oauth.fatsecret.com/connect/token';
 
 /**
@@ -13,6 +10,9 @@ export async function getAccessToken() {
   const formData = new URLSearchParams();
   formData.append('grant_type', 'client_credentials');
   formData.append('scope', 'basic'); // Adjust scope as needed
+
+  const clientId = process.env.FAT_SECRET_CLIENT_ID;
+  const clientSecret = process.env.FAT_SECRET_CLIENT_SECRET;
 
   try {
     const response = await axios.post(tokenUrl, formData, {
@@ -82,20 +82,26 @@ function fsv1FoodtoFood(food) {
  * @returns {Promise<Array<V1Food>>} API response data
  */
 export async function searchFoods(accessToken, searchExpression, max_results=10) {
-  // create params object  
-  const params = {
-    search_expression: searchExpression,
-    max_results: max_results,
-  };
+  try {
+    // create params object  
+    const params = {
+        search_expression: searchExpression,
+        max_results: max_results,
+    };
 
-  // call foods.search method
-  const data = await callFatSecretApi(accessToken, 'foods.search', params);
+    // call foods.search method
+    const data = await callFatSecretApi(accessToken, 'foods.search', params);
 
-  // get array of foods from response
-  let foods = Array.isArray(data.foods) ? data.foods : [data.foods];
+    // get array of foods from response
+    let foods = Array.isArray(data.foods.food) ? data.foods.food : [data.foods.food];
 
-  // convert each food to our Food model format
-  foods = foods.map(fsv1FoodtoFood);
+    // convert each food to our Food model format
+    foods = foods.map(fsv1FoodtoFood);
+    
+    return foods;
+  } catch (error) {
+    console.error('Error searching foods:', error.response ? error.response.data : error.message);
+    return [];
+  }
 
-  return foods;
 }
