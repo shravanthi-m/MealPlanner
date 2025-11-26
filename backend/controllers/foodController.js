@@ -16,7 +16,19 @@ export const createFood = async (req, res) => {
 };
 
 // Optionally add GET /api/food/ for listing foods
+
+// Optionally add GET /api/food for listing foods
 export const getFoods = async (req, res) => {
+  try {
+    const foods = await Food.find();
+    return res.status(200).json(foods);
+  } catch (err) {
+    console.error("Food fetch error:", err);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const getFood = async (req, res) => {
   try {
     const { name } = req.body;
 
