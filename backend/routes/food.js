@@ -9,6 +9,6 @@ router.post("/", authMiddleware, createFood);
 // List all foods
 router.get("/", authMiddleware, getFoods);
 // query food by name
-router.get("/search", authMiddleware, getFood);
+router.post("/search", authMiddleware, getFood);
 
 export default router;

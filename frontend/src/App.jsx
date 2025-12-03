@@ -5,6 +5,7 @@ import RegisterPage from './pages/RegisterPage';
 import MealPlanPage from "./pages/MealPlanPage";
 import ShoppingListPage from "./pages/ShoppingListPage";
 import AddFoodPage from "./pages/AddFoodPage";
+import SearchFoodPage from "./pages/SearchFoodPage";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/meal-plan" element={<MealPlanPage />} />
         <Route path="/shopping-list" element={<ShoppingListPage />} />
         <Route path="/add-food" element={<AddFoodPage />} />
+        <Route path="/search-food" element={<SearchFoodPage />} />
       </Routes>
     </BrowserRouter>
   );

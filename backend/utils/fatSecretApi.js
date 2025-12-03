@@ -87,7 +87,21 @@ function fsv1FoodtoFood(data) {
             // create nutrition information object
             const nutrition_ = Object.fromEntries(
                 nutrition.split(' | ').map((info) => {
-                    return info.split(': ');
+                  // split by ': '
+                  const [key, value] = info.split(': ');
+
+                  // split quantity and unit
+                  const qpu = value.match(/[a-zA-Z]+|\d+/g);
+                  let quantity = qpu[0];
+                  let unit = qpu[1];
+
+                  // check for decimal point on quantity
+                  if (qpu.length == 3) {
+                    quantity = qpu[0] + '.' + qpu[1];
+                    unit = qpu[2];
+                  };
+
+                  return [key, {quantity: parseFloat(quantity), unit: unit}];
                 })
             );
             nutrition_information = {quantity: quantity, unit: unit, ...nutrition_};
