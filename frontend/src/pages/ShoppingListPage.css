@@ -60,10 +60,30 @@
 .btn.secondary { background: linear-gradient(90deg,#eef2ff,#e6fffa); color:#0f172a; box-shadow:none; }
 
 .shopping-list { margin-top:12px; }
+
+.category-section {
+  margin-bottom: 24px;
+}
+
+.category-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #4f46e5;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid rgba(79, 70, 229, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .shopping-list ul { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
 .shopping-item { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 12px; border-radius:12px; border:1px solid rgba(2,6,23,0.04); background:rgba(255,255,255,0.92); }
-.shopping-item label { display:flex; align-items:center; gap:12px; cursor:pointer; color:#0f172a; }
-.shopping-item .meta { color:#475569; font-size:13px; }
+.shopping-item label { display:flex; align-items:center; gap:12px; cursor:pointer; color:#0f172a; flex: 1; }
+.shopping-item .checked-item { 
+  text-decoration: line-through; 
+  color: #94a3b8; 
+}
+.shopping-item .meta { color:#475569; font-size:13px; white-space: nowrap; }
 
 .empty { padding:16px; text-align:center; color:#64748b; }
 

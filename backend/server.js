@@ -23,11 +23,6 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/api/meal-plan", mealPlanRoutes);
-app.use("/api/shopping-list", shoppingListRoutes);
-app.use("/api/food", foodRoutes);
-app.use("/api", pdfRoutes);
-
 
 const PORT = process.env.PORT || 5001;
 const MONGO_URI = process.env.MONGO_URI;
@@ -44,8 +39,12 @@ async function start() {
   try {
     await mongoose.connect(MONGO_URI);
 
-    // Routes
+    // Mount all routes AFTER MongoDB is connected
     app.use("/api/auth", authRoutes);
+    app.use("/api/meal-plan", mealPlanRoutes);
+    app.use("/api/shopping-list", shoppingListRoutes);
+    app.use("/api/food", foodRoutes);
+    app.use("/api", pdfRoutes);
     app.get("/", (_req, res) => res.send("API running"));
 
     app.listen(PORT, () =>
