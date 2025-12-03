@@ -15,8 +15,6 @@ export const createFood = async (req, res) => {
   }
 };
 
-// Optionally add GET /api/food/ for listing foods
-
 // Optionally add GET /api/food for listing foods
 export const getFoods = async (req, res) => {
   try {
@@ -28,6 +26,7 @@ export const getFoods = async (req, res) => {
   }
 };
 
+// Search food by name /api/food/search
 export const getFood = async (req, res) => {
   try {
     const { name } = req.body;
