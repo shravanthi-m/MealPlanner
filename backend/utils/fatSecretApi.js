@@ -76,20 +76,27 @@ function fsv1FoodtoFood(data) {
         let nutrition_information = {};
 
         if (typeof food.food_description === 'string') {
+            // split description into serving and nutrition info
             const [serving, nutrition] = food.food_description.split(' - ');
+
+            // splite serving into quantity and unit
+            const [quantity, unit] = serving
+                .split('Per ')[1]
+                .match(/[a-zA-Z]+|\d+/g);
+
+            // create nutrition information object
             const nutrition_ = Object.fromEntries(
                 nutrition.split(' | ').map((info) => {
                     return info.split(': ');
                 })
             );
-            nutrition_information = {serving: serving.split('Per ')[1], ...nutrition_};
+            nutrition_information = {quantity: quantity, unit: unit, ...nutrition_};
         };
 
         return {
             name: food.food_name,
             category: food.food_type,
             nutrition_information: nutrition_information,
-            ingredients: [], // FatSecret API does not provide ingredient details in search
         };
     });
 
