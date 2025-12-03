@@ -66,6 +66,7 @@ export default function NavBar() {
         <div className="brand" onClick={() => navigate("/")}>MealPlanner</div>
       </div>
       <ul className="nav-links">
+        <li><NavLink to="/search-food" className={({isActive}) => isActive ? 'active' : ''}>Search for Food</NavLink></li>
         <li><NavLink to="/add-food" className={({isActive}) => isActive ? 'active' : ''}>Add Food</NavLink></li>
         <li><NavLink to="/meal-plan" className={({isActive}) => isActive ? 'active' : ''}>Weekly Meal Plan</NavLink></li>
         <li><NavLink to="/shopping-list" className={({isActive}) => isActive ? 'active' : ''}>Shopping List</NavLink></li>
