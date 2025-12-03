@@ -44,13 +44,14 @@ export const getFood = async (req, res) => {
       foods = await searchFoods(await getAccessToken(), name, 5);
 
       // convert to Food model instances
-      foods = await Promise.all(foods.map(async (food) => {
-        return new Food({
+      foods = foods.map((food) => {
+        return {
           name: food.name,
           category: food.category,
+          nutrition_information: food.nutrition_information,
           ingredients: food.ingredients
-        });
-      }));
+        };
+      });
     }
 
     return res.status(200).json(foods);

@@ -57,6 +57,7 @@ export async function callFatSecretApi(accessToken, method, params = {}) {
  * @typedef {Object} V1Food
  * @property {String} name
  * @property {String} category
+ * @property {Object} nutrition_information
  * @property {Array} ingredients
  */
 /**
