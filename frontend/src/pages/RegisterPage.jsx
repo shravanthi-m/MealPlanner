@@ -22,11 +22,13 @@ const RegisterPage = () => {
       return;
     }
 
-    const success = await register(form.name, form.email, form.password);
+    const result = await register(form.name, form.email, form.password);
 
-    if (success) {
-      alert('You successly created your account! Go back to the login page to sign in');
+    if (result.success) {
+      alert('You successfully created your account! Go back to the login page to sign in');
       navigate('/login');
+    } else {
+      setError(result.message || 'Registration failed. Please try again.');
     }
   };
 
