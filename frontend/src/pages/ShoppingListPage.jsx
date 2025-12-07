@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import NavBar from "../components/NavBar";
 import ShoppingListView from "../components/ShoppingListView";
 import { useShoppingList } from "../hooks/useShoppingList";
+import { getStoreValue } from "pulsy";
 import "./ShoppingListPage.css";
 
 const getWeekStartISO = () => {
@@ -23,8 +24,36 @@ const ShoppingListPage = () => {
     // eslint-disable-next-line
   }, []);
 
-  const handleDownloadPDF = () => {
-    window.open(`/api/shopping-list/pdf?weekStart=${encodeURIComponent(weekStart)}`, "_blank");
+  const handleDownloadPDF = async () => {
+    try {
+      const authStore = getStoreValue('auth');
+      const token = authStore.token;
+      
+      const response = await fetch(`/api/shopping-list/pdf?weekStart=${encodeURIComponent(weekStart)}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF');
+      }
+
+      // Create a blob from the PDF response
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `shopping-list-${weekStart}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error('Error downloading PDF:', err);
+      alert('Failed to download PDF. Please try again.');
+    }
   };
 
   return (

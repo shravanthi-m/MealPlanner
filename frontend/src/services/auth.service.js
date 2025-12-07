@@ -35,10 +35,11 @@ export const register = async (username, email, password) => {
         { username, email, password }
     );
   
-    return true;
+    return { success: true };
   } catch (error) {
-    console.error('Login failed', error);
-    return false;
+    console.error('Registration failed', error);
+    const message = error.response?.data?.message || 'Registration failed. Please try again.';
+    return { success: false, message };
   }
 };
 

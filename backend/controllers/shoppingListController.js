@@ -2,6 +2,137 @@ import ShoppingList from "../models/ShoppingList.js";
 import MealPlan from "../models/MealPlan.js";
 import Food from "../models/Food.js";
 import { getFoodCategoryFromUSDA } from "../utils/usdaApi.js";
+import { getAccessToken, searchFoods } from "../utils/fatSecretApi.js";
+
+// Category mapping for common ingredients
+const categoryMap = {
+  // Poultry
+  'chicken': 'Poultry',
+  'turkey': 'Poultry',
+  'duck': 'Poultry',
+  'chicken breast': 'Poultry',
+  'chicken thigh': 'Poultry',
+  
+  // Meat
+  'beef': 'Meat',
+  'pork': 'Meat',
+  'lamb': 'Meat',
+  'steak': 'Meat',
+  'ground beef': 'Meat',
+  'bacon': 'Meat',
+  'sausage': 'Meat',
+  'ham': 'Meat',
+  
+  // Seafood
+  'fish': 'Seafood',
+  'salmon': 'Seafood',
+  'tuna': 'Seafood',
+  'shrimp': 'Seafood',
+  'crab': 'Seafood',
+  'lobster': 'Seafood',
+  'cod': 'Seafood',
+  
+  // Dairy
+  'milk': 'Dairy',
+  'cheese': 'Dairy',
+  'butter': 'Dairy',
+  'yogurt': 'Dairy',
+  'cream': 'Dairy',
+  'sour cream': 'Dairy',
+  'cottage cheese': 'Dairy',
+  'mozzarella': 'Dairy',
+  'cheddar': 'Dairy',
+  'parmesan': 'Dairy',
+  
+  // Produce - Vegetables
+  'tomato': 'Produce',
+  'lettuce': 'Produce',
+  'onion': 'Produce',
+  'garlic': 'Produce',
+  'carrot': 'Produce',
+  'broccoli': 'Produce',
+  'spinach': 'Produce',
+  'pepper': 'Produce',
+  'bell pepper': 'Produce',
+  'potato': 'Produce',
+  'cucumber': 'Produce',
+  'celery': 'Produce',
+  'mushroom': 'Produce',
+  'zucchini': 'Produce',
+  'squash': 'Produce',
+  'kale': 'Produce',
+  'cabbage': 'Produce',
+  'cauliflower': 'Produce',
+  'eggplant': 'Produce',
+  
+  // Produce - Fruits
+  'apple': 'Produce',
+  'banana': 'Produce',
+  'orange': 'Produce',
+  'lemon': 'Produce',
+  'lime': 'Produce',
+  'strawberry': 'Produce',
+  'blueberry': 'Produce',
+  'grape': 'Produce',
+  'watermelon': 'Produce',
+  'pineapple': 'Produce',
+  'mango': 'Produce',
+  'avocado': 'Produce',
+  
+  // Grains & Bakery
+  'bread': 'Bakery',
+  'flour': 'Baking',
+  'rice': 'Grains',
+  'pasta': 'Grains',
+  'cereal': 'Grains',
+  'oats': 'Grains',
+  'quinoa': 'Grains',
+  'tortilla': 'Bakery',
+  
+  // Condiments & Sauces
+  'salt': 'Condiments',
+  'pepper': 'Condiments',
+  'oil': 'Condiments',
+  'olive oil': 'Condiments',
+  'vinegar': 'Condiments',
+  'soy sauce': 'Condiments',
+  'ketchup': 'Condiments',
+  'mustard': 'Condiments',
+  'mayonnaise': 'Condiments',
+  
+  // Baking
+  'sugar': 'Baking',
+  'baking powder': 'Baking',
+  'baking soda': 'Baking',
+  'vanilla': 'Baking',
+  'chocolate': 'Baking',
+  
+  // Eggs
+  'egg': 'Eggs',
+  'eggs': 'Eggs',
+};
+
+/**
+ * Determine category for an ingredient
+ */
+function getCategoryForIngredient(ingredientName) {
+  const nameLower = ingredientName.toLowerCase().trim();
+  
+  // Check exact match first
+  if (categoryMap[nameLower]) {
+    return categoryMap[nameLower];
+  }
+  
+  // Check if any key is contained in the ingredient name
+  for (const [key, category] of Object.entries(categoryMap)) {
+    if (nameLower.includes(key)) {
+      return category;
+    }
+  }
+  
+  return 'Other';
+}
+
 // POST /api/shopping-list/generate?weekStart=...
 export const generateShoppingList = async (req, res) => {
   try {
@@ -46,7 +177,7 @@ export const generateShoppingList = async (req, res) => {
                   quantity: 0,
                   unit: ingredient.unit || "unit",
                   checked: false,
-                  category: null
+                  category: getCategoryForIngredient(ingredient.name)
                 };
               }
               itemMap[key].quantity += ingredient.quantity || 1;
@@ -55,8 +186,6 @@ export const generateShoppingList = async (req, res) => {
         });
       });
     });
-
-    // Do not assign categories; just leave as null for a plain checklist
 
     // Save shopping list
     const items = Object.values(itemMap);
