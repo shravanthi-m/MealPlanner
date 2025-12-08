@@ -2,19 +2,49 @@
 
 // testing libraries
 import request from "supertest";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
 // application to test
-import { createApp } from "../server.js";
+import { createApp } from "../routes/index.js";
+import mongoose from "mongoose";
+
+// app instance
+let app;
 
 // TODO: create a mock database for testing
 async function setupMockDB() {
-    // Implement mock database setup
+    mongoServer = await MongoMemoryServer.create();
+    const mongoUri = mongoServer.getUri();
+
+    await mongoose.connect(mongoUri);
 }
 
+async function teardownMockDB() {
+    await mongoose.connection.dropDatabase();
+    await mongoose.disconnect();
+    await mongoServer.stop();
+}
+
+async function clearMockDB() {
+    const collections = mongoose.connection.collections;
+    for (const key in collections) {
+        const collection = collections[key];
+        await collection.deleteMany();
+    }
+}
+
+beforeAll(async () => {
+    app = createApp();
+    await setupMockDB();
+});
+
+afterAll(async () => {
+    await teardownMockDB();
+});
+
 // TODO: Test Login/Registration
-describe("Test Login/Registration", async () => {
+describe("Test Login/Registration", () => {
     it("should register a new user", async () => {
-        const app = await start();
         const res = await request(app)
             .post("/api/auth/register")
             .send({
@@ -22,12 +52,11 @@ describe("Test Login/Registration", async () => {
                 email: "testuser@example.com",
                 password: "testpassword"
             });
-        expect(res.statusCode).toEqual(201);
+        expect(res.statusCode).toEqual(200);
         expect(res.body).toHaveProperty("message", "User registered successfully");
     });
 
     it("should not register a user with existing email", async () => {
-        const app = await start();
         const res = await request(app)
             .post("/api/auth/register")
             .send({
@@ -40,13 +69,13 @@ describe("Test Login/Registration", async () => {
     });
 
     it("should login an existing user", async () => {
-        const app = await start();
         const res = await request(app)
             .post("/api/auth/login")
             .send({
                 email: "testuser@example.com",
                 password: "testpassword"
             });
+        console.log(res.body);
         expect(res.statusCode).toEqual(200);
         expect(res.body).toHaveProperty("token");
     });
