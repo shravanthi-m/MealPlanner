@@ -35,7 +35,7 @@ if (!MONGO_URI) {
 mongoose.connection.on("connected", () => console.log("MongoDB connected"));
 mongoose.connection.on("error", (err) => console.error("MongoDB error:", err));
 
-async function start() {
+export async function start() {
   try {
     await mongoose.connect(MONGO_URI);
 
@@ -50,6 +50,8 @@ async function start() {
     app.listen(PORT, () =>
       console.log(`Server running on http://localhost:${PORT}`)
     );
+
+    return app;
   } catch (err) {
     console.error("Failed to start server:", err);
     process.exit(1);
