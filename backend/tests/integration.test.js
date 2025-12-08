@@ -42,63 +42,81 @@ afterAll(async () => {
     await teardownMockDB();
 });
 
-// TODO: Test Login/Registration
-describe("Test Login/Registration", () => {
-    it("should register a new user", async () => {
-        const res = await request(app)
-            .post("/api/auth/register")
-            .send({
-                username: "testuser",
-                email: "testuser@example.com",
-                password: "testpassword"
-            });
-        expect(res.statusCode).toEqual(200);
-        expect(res.body).toHaveProperty("message", "User registered successfully");
+describe("Integration Tests for all routes", () => {
+    // Test login and registration routes
+    describe("Test Login/Registration", () => {
+        it("should register a new user", async () => {
+            const res = await request(app)
+                .post("/api/auth/register")
+                .send({
+                    username: "testuser",
+                    email: "testuser@example.com",
+                    password: "testpassword"
+                });
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toHaveProperty("message", "User registered successfully");
+        });
+
+        it("should not register a user with existing email", async () => {
+            const res = await request(app)
+                .post("/api/auth/register")
+                .send({
+                    username: "testuser2",
+                    email: "testuser@example.com",
+                    password: "testpassword2"
+                });
+            expect(res.statusCode).toEqual(400);
+            expect(res.body).toHaveProperty("message", "Email already exists");
+        });
+
+        it("should login an existing user", async () => {
+            const res = await request(app)
+                .post("/api/auth/login")
+                .send({
+                    email: "testuser@example.com",
+                    password: "testpassword"
+                });
+            console.log(res.body);
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toHaveProperty("token");
+        });
+    });
+    
+    // TODO: Test Authenticated Routes (Meal Plans, Shopping Lists, Food Items, PDF Generation)
+
+    // TODO: Food Item Routes
+    describe("Test Food Item Routes", () => {
+        // Add tests for creating and retrieving food items
+
+        // add various food items to user database
+
+        // try adding existing food item from API to user database
+        it("should not create duplicate food items", async () => {
+            request(app)
+                .post("/api/food-items")
+            // verify no duplicates exist after adding existing food item
+        });
+
+        // try adding new food item from API to user database
+        it("should create new food item", async () => {
+            // test implementation here
+
+            // verify new food item exists in user database
+        });
     });
 
-    it("should not register a user with existing email", async () => {
-        const res = await request(app)
-            .post("/api/auth/register")
-            .send({
-                username: "testuser2",
-                email: "testuser@example.com",
-                password: "testpassword2"
-            });
-        expect(res.statusCode).toEqual(400);
-        expect(res.body).toHaveProperty("message", "Email already exists");
+    // TODO: Meal Plan Routes
+    describe("Test Meal Plan Routes", () => {
+        // Add tests for creating and retrieving meal plans
     });
 
-    it("should login an existing user", async () => {
-        const res = await request(app)
-            .post("/api/auth/login")
-            .send({
-                email: "testuser@example.com",
-                password: "testpassword"
-            });
-        console.log(res.body);
-        expect(res.statusCode).toEqual(200);
-        expect(res.body).toHaveProperty("token");
+    // TODO: Shopping List Routes
+    describe("Test Shopping List Routes", () => {
+        // Add tests for creating and retrieving shopping lists
     });
-});
 
-// TODO: Test Authenticated Routes (Meal Plans, Shopping Lists, Food Items, PDF Generation)
-
-// TODO: Food Item Routes
-describe("Test Food Item Routes", () => {
-    // Add tests for creating and retrieving food items
-});
-
-// TODO: Meal Plan Routes
-describe("Test Meal Plan Routes", () => {
-    // Add tests for creating and retrieving meal plans
-});
-
-// TODO: Shopping List Routes
-describe("Test Shopping List Routes", () => {
-    // Add tests for creating and retrieving shopping lists
-});
-
-// TODO: PDF Generation Routes
-describe("Test PDF Generation Routes", () => {
-    // Add tests for PDF generation
-});
+    // TODO: PDF Generation Routes
+    describe("Test PDF Generation Routes", () => {
+        // Add tests for PDF generation
+    });
+})
