@@ -4,7 +4,7 @@
 import request from "supertest";
 
 // application to test
-import { start } from "../server.js";
+import { createApp } from "../server.js";
 
 // TODO: create a mock database for testing
 async function setupMockDB() {
@@ -12,7 +12,7 @@ async function setupMockDB() {
 }
 
 // TODO: Test Login/Registration
-describe("Test Login/Registration", () => {
+describe("Test Login/Registration", async () => {
     it("should register a new user", async () => {
         const app = await start();
         const res = await request(app)
