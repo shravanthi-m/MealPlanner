@@ -83,10 +83,22 @@ describe("Test Login/Registration", () => {
 
 // TODO: Test Authenticated Routes (Meal Plans, Shopping Lists, Food Items, PDF Generation)
 
+// TODO: Food Item Routes
+describe("Test Food Item Routes", () => {
+    // Add tests for creating and retrieving food items
+});
+
 // TODO: Meal Plan Routes
+describe("Test Meal Plan Routes", () => {
+    // Add tests for creating and retrieving meal plans
+});
 
 // TODO: Shopping List Routes
-
-// TODO: Food Item Routes
+describe("Test Shopping List Routes", () => {
+    // Add tests for creating and retrieving shopping lists
+});
 
 // TODO: PDF Generation Routes
+describe("Test PDF Generation Routes", () => {
+    // Add tests for PDF generation
+});
