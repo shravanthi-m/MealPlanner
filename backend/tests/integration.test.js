@@ -9,11 +9,13 @@ import { createApp } from "../routes/index.js";
 
 import mongoose from "mongoose";
 
+// test variables
 // app instance
 let app;
-
 // jwt token
 let token;
+let newFood;
+let ingredients;
 
 // TODO: create a mock database for testing
 async function setupMockDB() {
@@ -87,9 +89,6 @@ describe("Integration Tests for all routes", () => {
     });
     
     describe("Test Food Item Routes", () => {
-        let newFood;
-        let ingredients;
-
         // try adding existing food item from API to user database
         it("should not create duplicate food items", async () => {            
             // query some food
@@ -168,6 +167,71 @@ describe("Integration Tests for all routes", () => {
     // TODO: Meal Plan Routes
     describe("Test Meal Plan Routes", () => {
         // Add tests for creating and retrieving meal plans
+
+        it("should create or update a meal plan", async () => {
+            // get foods from database
+            const foodsRes = await request(app)
+                .get("/api/food")
+                .set('Authorization', `Bearer ${token}`);
+
+            const foods = foodsRes.body;
+
+            // create meal plan
+            const res = await request(app)
+                .post("/api/meal-plan")
+                .send({
+                    weekStart: "2024-12-07",
+                    days: [ 
+                        { date: "2024-12-07", breakfast: [{ foodId: foods[0]._id, servings: 2 }], lunch: [], dinner: [], snacks: [] },
+                        { date: "2024-12-08", breakfast: [], lunch: [{ foodId: foods[1]._id }], dinner: [], snacks: [] }
+                    ]
+                })
+                .set('Authorization', `Bearer ${token}`);
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toHaveProperty("weekStart");
+            expect(new Date(res.body.weekStart)).toEqual(new Date("2024-12-07"));
+
+            // verify meal plan saved
+            const getRes = await request(app)
+                .get("/api/meal-plan")
+                .query({ weekStart: "2024-12-07" })
+                .set('Authorization', `Bearer ${token}`);
+            expect(getRes.statusCode).toEqual(200);
+            expect(getRes.body).toHaveProperty("days");
+            expect(getRes.body.days.length).toEqual(2);
+            expect(new Date(getRes.body.days[0].date)).toEqual(new Date("2024-12-07"));
+            expect(new Date(getRes.body.days[1].date)).toEqual(new Date("2024-12-08"));
+            expect(getRes.body.days[0].breakfast[0].servings).toEqual(2);
+            expect(getRes.body.days[1].lunch[0].servings).toEqual(1); // default servings
+            expect(getRes.body.days[0].breakfast[0].foodId).toEqual(foods[0]._id.toString());
+            expect(getRes.body.days[1].lunch[0].foodId).toEqual(foods[1]._id.toString());
+
+            // update meal plan
+            const updateRes = await request(app)
+                .post("/api/meal-plan")
+                .send({
+                    weekStart: "2024-12-07",
+                    days: [
+                        { date: "2024-12-07", breakfast: [{ foodId: foods[0]._id, servings: 1 }], lunch: [], dinner: [], snacks: [] },
+                        { date: "2024-12-08", breakfast: [{ foodId: foods[1]._id, servings: 3 }], lunch: [], dinner: [], snacks: [] }
+                    ]
+                })
+                .set('Authorization', `Bearer ${token}`);
+            expect(updateRes.statusCode).toEqual(200);
+            expect(res.body).toHaveProperty("weekStart");
+            expect(new Date(res.body.weekStart)).toEqual(new Date("2024-12-07"));
+
+            // verify meal plan updated
+            const updateGetRes = await request(app)
+                .get("/api/meal-plan")
+                .query({ weekStart: "2024-12-07" })
+                .set('Authorization', `Bearer ${token}`);
+            expect(updateGetRes.body.days[0].breakfast[0].servings).toEqual(1);
+            expect(updateGetRes.body.days[1].breakfast[0].servings).toEqual(3);
+            expect(updateGetRes.body.days[0].breakfast[0].foodId).toEqual(foods[0]._id.toString());
+            expect(updateGetRes.body.days[1].breakfast[0].foodId).toEqual(foods[1]._id.toString());
+            expect(updateGetRes.body.days[0].lunch.length).toEqual(0);
+        });
     });
 
     // TODO: Shopping List Routes
