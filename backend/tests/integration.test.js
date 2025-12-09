@@ -6,10 +6,14 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 
 // application to test
 import { createApp } from "../routes/index.js";
+
 import mongoose from "mongoose";
 
 // app instance
 let app;
+
+// jwt token
+let token;
 
 // TODO: create a mock database for testing
 async function setupMockDB() {
@@ -76,32 +80,79 @@ describe("Integration Tests for all routes", () => {
                     email: "testuser@example.com",
                     password: "testpassword"
                 });
-            console.log(res.body);
             expect(res.statusCode).toEqual(200);
             expect(res.body).toHaveProperty("token");
+            token = res.body.token; // save token for authenticated routes
         });
     });
     
-    // TODO: Test Authenticated Routes (Meal Plans, Shopping Lists, Food Items, PDF Generation)
-
-    // TODO: Food Item Routes
     describe("Test Food Item Routes", () => {
-        // Add tests for creating and retrieving food items
-
-        // add various food items to user database
+        let newFood;
 
         // try adding existing food item from API to user database
-        it("should not create duplicate food items", async () => {
-            request(app)
-                .post("/api/food-items")
-            // verify no duplicates exist after adding existing food item
+        it("should not create duplicate food items", async () => {            
+            // query some food
+            let res = await request(app)
+                .get("/api/food/search")
+                .query({ query: "chicken" })
+                .set('Authorization', `Bearer ${token}`);
+            expect(res.statusCode).toEqual(200);
+            expect(res.body.api).toBeInstanceOf(Array);
+
+            // get first food item from results
+            newFood = res.body.api[0];
+
+            // add food 
+            res = await request(app)
+                .post("/api/food/save")
+                .send({
+                    name: newFood.name,
+                    category: newFood.category
+                })
+                .set('Authorization', `Bearer ${token}`);
+            expect(res.statusCode).toEqual(201);
+
+            // try adding same food again
+             res = await request(app)
+                .post("/api/food/save")
+                .send({
+                    name: newFood.name,
+                    category: newFood.category,
+                })
+                .set('Authorization', `Bearer ${token}`);
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toHaveProperty("message", "Food already exists");
+
+            // verify new food item exists in user database
+            res = await request(app)
+                .get("/api/food")
+                .set('Authorization', `Bearer ${token}`);
+            expect(res.statusCode).toEqual(200);
+            const foodNames = res.body.map(f => f.name);
+            expect(foodNames).toContain(newFood.name);
         });
 
         // try adding new food item from API to user database
         it("should create new food item", async () => {
-            // test implementation here
+            // create some food
+            let res = await request(app)
+                .post("/api/food")
+                .send({
+                    name: "cake",
+                    category: "dessert"
+                })
+                .set('Authorization', `Bearer ${token}`);
+            expect(res.statusCode).toEqual(201);
+            expect(res.body).toHaveProperty("name", "cake");
 
             // verify new food item exists in user database
+            res = await request(app)
+                .get("/api/food")
+                .set('Authorization', `Bearer ${token}`);
+            expect(res.statusCode).toEqual(200);
+            const foodNames = res.body.map(f => f.name);
+            expect(foodNames).toContain("cake");
+            expect(foodNames).toContain(newFood.name);
         });
     });
 
