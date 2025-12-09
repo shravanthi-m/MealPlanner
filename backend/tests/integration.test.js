@@ -88,6 +88,7 @@ describe("Integration Tests for all routes", () => {
     
     describe("Test Food Item Routes", () => {
         let newFood;
+        let ingredients;
 
         // try adding existing food item from API to user database
         it("should not create duplicate food items", async () => {            
@@ -102,12 +103,20 @@ describe("Integration Tests for all routes", () => {
             // get first food item from results
             newFood = res.body.api[0];
 
+            // parse ingredients
+            ingredients = newFood.ingredients.map(ing => ({
+                name: ing.name,
+                quantity: ing.quantity,
+                unit: ing.unit
+            }));
+
             // add food 
             res = await request(app)
                 .post("/api/food/save")
                 .send({
                     name: newFood.name,
-                    category: newFood.category
+                    category: newFood.category,
+                    ingredients: ingredients
                 })
                 .set('Authorization', `Bearer ${token}`);
             expect(res.statusCode).toEqual(201);
