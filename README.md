@@ -53,7 +53,7 @@ VITE_API_URL=http://localhost:5001
 ### Required API Keys
 
 1. **MongoDB Atlas**: Sign up at [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas)
-    - **Note**: Sample database exports (JSON files) are included separately in the submission
+    - **Note**: Sample database exports (JSON files) are included separately in the db_export/ directory
 2. **Spoonacular**: Get API key at [spoonacular.com/food-api](https://spoonacular.com/food-api)
 3. **FatSecret**: Get API key at [platform.fatsecret.com/api](https://platform.fatsecret.com/api)
 
