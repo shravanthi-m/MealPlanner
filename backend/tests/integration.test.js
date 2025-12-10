@@ -164,7 +164,6 @@ describe("Integration Tests for all routes", () => {
         });
     });
 
-    // TODO: Meal Plan Routes
     describe("Test Meal Plan Routes", () => {
         // Add tests for creating and retrieving meal plans
 
@@ -232,15 +231,5 @@ describe("Integration Tests for all routes", () => {
             expect(updateGetRes.body.days[1].breakfast[0].foodId).toEqual(foods[1]._id.toString());
             expect(updateGetRes.body.days[0].lunch.length).toEqual(0);
         });
-    });
-
-    // TODO: Shopping List Routes
-    describe("Test Shopping List Routes", () => {
-        // Add tests for creating and retrieving shopping lists
-    });
-
-    // TODO: PDF Generation Routes
-    describe("Test PDF Generation Routes", () => {
-        // Add tests for PDF generation
     });
 })
